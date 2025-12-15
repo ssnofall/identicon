@@ -15,7 +15,6 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // SVG Icons as components
     const Download = () => (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -155,27 +154,44 @@
       };
 
       return (
-        <div className="min-h-screen bg-stone-100 p-8">
+        <div className="min-h-screen bg-stone-100 p-4 sm:p-8">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="text-green-700">
+            <div className="mb-6 sm:mb-8">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                <div className="text-green-700 flex-shrink-0">
                   <User />
                 </div>
-                <h1 className="text-4xl font-bold text-gray-800">
+                <h1 className="text-2xl sm:text-4xl font-bold text-gray-800">
                   Identicon Generator
                 </h1>
               </div>
-              <p className="text-gray-600 text-base font-mono">
+              <p className="text-gray-600 text-sm sm:text-base font-mono">
                 → Create unique avatar patterns from any username
               </p>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md border-2 border-gray-300 p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-md border-2 border-gray-300 p-4 sm:p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                {/* Canvas section - appears first on mobile */}
+                <div className="flex flex-col items-center justify-center order-first md:order-last">
+                  <div className="bg-white rounded shadow-md p-3 sm:p-4 border-2 border-gray-300 w-full max-w-sm mx-auto">
+                    <canvas
+                      ref={canvasRef}
+                      className="w-full h-auto"
+                      style={{imageRendering: 'pixelated'}}
+                    />
+                  </div>
+                  {!username && (
+                    <p className="text-gray-500 text-xs sm:text-sm mt-3 sm:mt-4 text-center font-mono px-4">
+                      → Enter a username to generate your identicon
+                    </p>
+                  )}
+                </div>
+
+                {/* Controls section */}
+                <div className="space-y-4 sm:space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 font-mono">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2 font-mono">
                       username:
                     </label>
                     <div className="flex gap-2">
@@ -184,11 +200,11 @@
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Enter username..."
-                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded focus:border-green-600 focus:outline-none transition-colors font-mono"
+                        className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-300 rounded focus:border-green-600 focus:outline-none transition-colors font-mono text-sm sm:text-base"
                       />
                       <button
                         onClick={handleRandomUsername}
-                        className="px-4 py-3 bg-stone-200 hover:bg-stone-300 border-2 border-gray-300 rounded transition-colors"
+                        className="px-3 sm:px-4 py-2 sm:py-3 bg-stone-200 hover:bg-stone-300 active:bg-stone-400 border-2 border-gray-300 rounded transition-colors flex-shrink-0"
                         title="Random username"
                       >
                         <Shuffle />
@@ -197,7 +213,7 @@
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 font-mono">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2 font-mono">
                       grid size: {gridSize}x{gridSize}
                     </label>
                     <input
@@ -220,15 +236,15 @@
                   <button
                     onClick={handleDownload}
                     disabled={!username}
-                    className="w-full px-6 py-4 bg-green-700 text-white rounded font-semibold hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all border-2 border-green-800 disabled:border-gray-500 flex items-center justify-center gap-2 font-mono"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-green-700 text-white rounded font-semibold hover:bg-green-800 active:bg-green-900 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all border-2 border-green-800 disabled:border-gray-500 flex items-center justify-center gap-2 font-mono text-sm sm:text-base"
                   >
                     <Download />
                     <span>download avatar.png</span>
                   </button>
 
-                  <div className="bg-stone-50 rounded border-2 border-gray-300 p-4">
-                    <h3 className="font-semibold text-gray-800 mb-2 font-mono">// how it works</h3>
-                    <ul className="text-sm text-gray-600 space-y-1 font-mono">
+                  <div className="bg-stone-50 rounded border-2 border-gray-300 p-3 sm:p-4">
+                    <h3 className="font-semibold text-gray-800 mb-2 font-mono text-sm sm:text-base">// how it works</h3>
+                    <ul className="text-xs sm:text-sm text-gray-600 space-y-1 font-mono">
                       <li>• Each username generates a unique pattern</li>
                       <li>• Pattern is symmetrical for visual appeal</li>
                       <li>• Color is derived from the username hash</li>
@@ -236,25 +252,10 @@
                     </ul>
                   </div>
                 </div>
-
-                <div className="flex flex-col items-center justify-center">
-                  <div className="bg-white rounded shadow-md p-4 border-2 border-gray-300">
-                    <canvas
-                      ref={canvasRef}
-                      className="max-w-full h-auto"
-                      style={{imageRendering: 'pixelated'}}
-                    />
-                  </div>
-                  {!username && (
-                    <p className="text-gray-500 text-sm mt-4 text-center font-mono">
-                      → Enter a username to generate your identicon
-                    </p>
-                  )}
-                </div>
               </div>
             </div>
 
-            <div className="mt-8 text-gray-600 text-sm font-mono">
+            <div className="mt-6 sm:mt-8 text-gray-600 text-xs sm:text-sm font-mono">
               <p>// vibecoded with ai by <a href="https://github.com/ssnofall" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">snofall</a></p>
               <p>// generates deterministic avatar patterns</p>
             </div>
